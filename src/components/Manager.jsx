@@ -33,11 +33,14 @@ function Manager() {
     }
 
     const handleEdit = (id) =>{
-        console.log("edir", id);
+        let inputA = passwordArray.filter(item =>item.id === id)
+        setForm(inputA[0]);
+        setPasswordArray(passwordArray.filter(item =>item.id != id)); 
     }
 
     const handleDelete = (id) =>{
-        console.log("ezxzdir", id); 
+        setPasswordArray(passwordArray.filter(item =>item.id != id)); 
+        localStorage.setItem("passwords", JSON.stringify(passwordArray.filter(item =>item.id != id)))
     }
 
   return (
