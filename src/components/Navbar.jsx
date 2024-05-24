@@ -8,7 +8,7 @@ function Navbar() {
           Pass<span className='text-green-500'>Op </span>
          <span className='text-green-500'>/&gt;</span>
          </div>
-        <diV className='bg-green-500 hover:bg-green-300 hover:cursor-pointer rounded-full px-2 py-1 border border-1'><button>Github</button></diV>
+        <div className='bg-green-500 hover:bg-green-300 hover:cursor-pointer rounded-full px-2 py-1 border border-1'><button>Github</button></div>
     </div>
   )
 }
