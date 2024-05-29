@@ -7,11 +7,19 @@ function Manager() {
     const [form , setForm] = useState({site:"",username:"",password:""})
     const [passwordArray, setPasswordArray] = useState([]);
 
+    const getPasswords = async () => {
+      let req = await fetch("http://localhost:3000/")
+      let passwords = await req.json()
+          setPasswordArray(passwords)
+     }
+
     useEffect(()=>{
-        let passwords = localStorage.getItem("passwords");
-        if(passwords){
-            setPasswordArray(JSON.parse(passwords))
-        }
+      getPasswords()
+      // let passwords = localStorage.getItem("passwords");
+      // if(passwords){
+      //     setPasswordArray(JSON.parse(passwords))
+      // }
+      
     },[])
 
     const showPassword = () =>{
@@ -27,20 +35,25 @@ function Manager() {
         setForm({...form, [e.target.name]:e.target.value})
     }
 
-    const saveData = () =>{
+    const saveData = async () =>{
+
+        //if id is already exists then delete it for edit mode
+        await fetch("http://localhost:3000/", {method:"DELETE", headers:{"Content-Type" :"application/json"}, body:JSON.stringify({ id: form.id})})
         setPasswordArray([...passwordArray, {...form, id:uuidv4()}])
-        localStorage.setItem("passwords", JSON.stringify([...passwordArray, {...form, id:uuidv4()}]))
+        // localStorage.setItem("passwords", JSON.stringify([...passwordArray, {...form, id:uuidv4()}]))
+        await fetch("http://localhost:3000/", {method:"POST", headers:{"Content-Type" :"application/json"}, body:JSON.stringify({...form, id:uuidv4()})})
+        setForm({site:"",username:"",password:""})
     }
 
     const handleEdit = (id) =>{
-        let inputA = passwordArray.filter(item =>item.id === id)
-        setForm(inputA[0]);
+        setForm({...passwordArray.filter(item =>item.id === id)[0], id:id})
         setPasswordArray(passwordArray.filter(item =>item.id != id)); 
     }
 
-    const handleDelete = (id) =>{
+    const handleDelete = async (id) =>{
         setPasswordArray(passwordArray.filter(item =>item.id != id)); 
-        localStorage.setItem("passwords", JSON.stringify(passwordArray.filter(item =>item.id != id)))
+        // localStorage.setItem("passwords", JSON.stringify(passwordArray.filter(item =>item.id != id)))
+        let res = await fetch("http://localhost:3000/", {method:"DELETE", headers:{"Content-Type" :"application/json"}, body:JSON.stringify({ id})})
     }
 
   return (
